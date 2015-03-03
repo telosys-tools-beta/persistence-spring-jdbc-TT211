@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/jdbc 
+		http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+		">
+
+	<!-- DriverManagerDataSource : Spring simplest implementation of a DataSource (doesn’t support database connection pooling)-->
+	<!-- 
+	<bean id="dataSource"  class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"  value="${DOLLAR}{jdbc.driverClassName}" />
+		<property name="url"              value="${DOLLAR}{jdbc.url}" />
+		<property name="username"         value="${DOLLAR}{jdbc.username}" />
+		<property name="password"         value="${DOLLAR}{jdbc.password}" />
+	</bean>
+	 -->
+
+	<!-- Apache DBCP connection pool -->
+	<bean id="dataSource"  class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName"  value="${DOLLAR}{jdbc.driverClassName}" />
+		<property name="url"              value="${DOLLAR}{jdbc.url}" />
+		<property name="username"         value="${DOLLAR}{jdbc.username}" />
+		<property name="password"         value="${DOLLAR}{jdbc.password}" />
+	</bean>
+
+	<!-- The properties file containing the values for the JDBC datasource-->	
+	<context:property-placeholder location="jdbc.properties"/>
+	
+	<!-- 
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="datasource" />
+	</bean>
+	 -->
+	 
+	<!-- JNDI DataSource -->
+	<!-- 
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean"> 
+		<property name="jndiName"> 
+			<value>java:comp/env/jdbc/demodatasource</value> 
+		</property> 
+	</bean> 
+	 -->
+	
+	<!-- The packages where to search the DAO implementation -->
+	<context:component-scan base-package="${ROOT_PKG}.dao.commons, ${ROOT_PKG}.dao.impl.spring"/>
+	<context:annotation-config/>
+	
+</beans>
